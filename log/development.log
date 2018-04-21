@@ -1,0 +1,90 @@
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (29.8ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (49.3ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateUsers (20180421080057)
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.6ms)[0m  [1m[35mCREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "phone_number" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180421080057"]]
+  [1m[35m (19.5ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateRestaurants (20180421080144)
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE TABLE "restaurants" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35mSQL (0.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180421080144"]]
+  [1m[35m (45.6ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateSchedules (20180421080243)
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE TABLE "schedules" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "from" datetime, "to" datetime, "restaurant_id" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL, CONSTRAINT "fk_rails_e5ec0f7413"
+FOREIGN KEY ("restaurant_id")
+  REFERENCES "restaurants" ("id")
+)[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE  INDEX "index_schedules_on_restaurant_id" ON "schedules" ("restaurant_id")[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180421080243"]]
+  [1m[35m (26.5ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateTables (20180421080328)
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE TABLE "tables" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "restaurant_id" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL, CONSTRAINT "fk_rails_0700cfe41e"
+FOREIGN KEY ("restaurant_id")
+  REFERENCES "restaurants" ("id")
+)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE  INDEX "index_tables_on_restaurant_id" ON "tables" ("restaurant_id")[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180421080328"]]
+  [1m[35m (133.6ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateReservations (20180421080518)
+  [1m[35m (0.2ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE TABLE "reservations" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "from" datetime, "to" datetime, "user_id" integer, "table_id" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL, CONSTRAINT "fk_rails_48a92fce51"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+, CONSTRAINT "fk_rails_23ce71128d"
+FOREIGN KEY ("table_id")
+  REFERENCES "tables" ("id")
+)[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE  INDEX "index_reservations_on_user_id" ON "reservations" ("user_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_reservations_on_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_reservations_on_user_id' AND type='index'
+[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE  INDEX "index_reservations_on_table_id" ON "reservations" ("table_id")[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180421080518"]]
+  [1m[35m (32.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.4ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["key", "environment"], ["value", "development"], ["created_at", "2018-04-21 08:06:22.606104"], ["updated_at", "2018-04-21 08:06:22.606104"]]
+  [1m[35m (16.8ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.2ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_reservations_on_table_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_reservations_on_table_id' AND type='index'
+[0m
+  [1m[35m (0.2ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_reservations_on_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_reservations_on_user_id' AND type='index'
+[0m
+  [1m[35m (0.2ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_schedules_on_restaurant_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_schedules_on_restaurant_id' AND type='index'
+[0m
+  [1m[35m (0.2ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_tables_on_restaurant_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_tables_on_restaurant_id' AND type='index'
+[0m
